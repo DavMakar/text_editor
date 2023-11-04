@@ -1,11 +1,11 @@
 #include <QApplication>
 #include <QDebug>
-#include "userlogin.hpp"
+#include "mainwidget.hpp"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);        
-    UserLogin w;
+    MainWidget w;
     w.show();
     return a.exec();
 }

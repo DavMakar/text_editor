@@ -4,8 +4,8 @@
 #include <QHBoxLayout>
 #include <QGroupBox>
 #include <QLabel>
+#include <QDialog>
 #include <QPushButton>
-
 
 UserLogin::UserLogin(QWidget *parent)
     : QWidget{parent}
@@ -24,33 +24,28 @@ UserLogin::UserLogin(QWidget *parent)
     QPushButton* signIn = new QPushButton("Sign in");
     QPushButton* signUp = new QPushButton("Sign up");
 
-    QHBoxLayout* HButtonLayout = new QHBoxLayout(this);
+    QHBoxLayout* HButtonLayout = new QHBoxLayout();
     HButtonLayout->addWidget(signIn);
+    HButtonLayout->addStretch(1);
     HButtonLayout->addWidget(signUp);
-
-    QGroupBox* buttonsGroup = new QGroupBox(this);
-    buttonsGroup->setLayout(HButtonLayout);
 
     VLayout->addWidget(usernameLabel);
     VLayout->addWidget(usernameLineEdit);
     VLayout->addWidget(passwordLabel);
     VLayout->addWidget(passwordLineEdit);
-    VLayout->addWidget(buttonsGroup);
+    VLayout->addSpacing(15);
+    VLayout->addLayout(HButtonLayout);
 
     setLayout(VLayout);
 
-    connect(signIn, &QPushButton::clicked , this , &UserLogin::searchUser);
+    connect(signIn, &QPushButton::clicked , this , &UserLogin::signInClicked);
+    connect(signUp, &QPushButton::clicked , this , &UserLogin::signUpClicked);
 }
 
-void UserLogin::searchUser()
-{
-    QString username = usernameLineEdit->text();
-    QString password = passwordLineEdit->text();
+void UserLogin::signInClicked(){
+    emit signInSignal(usernameLineEdit->text(), passwordLineEdit->text());
+}
 
-    if(db.personExists(username,password)){
-        qDebug()<<"user found";
-    }
-    else{
-        qDebug()<<"not found";
-    }
+void UserLogin::signUpClicked(){
+    emit signUpSignal();
 }

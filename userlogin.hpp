@@ -4,19 +4,21 @@
 #include <QWidget>
 #include <QLineEdit>
 
-#include "dbmanager.hpp"
-
 class UserLogin : public QWidget
 {
     Q_OBJECT
 public:
     explicit UserLogin(QWidget *parent = nullptr);
 
+signals:
+    void signInSignal(const QString& username,const QString& password);
+    void signUpSignal();
+
 private slots:
-    void searchUser();
+    void signInClicked();
+    void signUpClicked();
 
 private:
-    DbManager db;
     QLineEdit* usernameLineEdit;
     QLineEdit* passwordLineEdit;
 };
