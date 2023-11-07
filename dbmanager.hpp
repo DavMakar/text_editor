@@ -2,6 +2,7 @@
 #define DBMANAGER_HPP
 
 #include <QSqlDatabase>
+#include <QString>
 
 class DbManager
 {
@@ -13,9 +14,10 @@ public:
     bool createTable();
 
     bool addPerson(const QString& username,const QString& password);
-    bool personExists(const QString& username,const QString& password) const;
+    std::optional<int> personExists(const QString& username,const QString& password) const;
 
-    void printAllPersons() const;
+    QString getUserDocumentText(int id) const;
+    bool setUserDocumentText(const QString& plainText,int id);
     bool removeAllPersons();
 
 private:

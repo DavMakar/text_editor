@@ -13,12 +13,14 @@ SOURCES += \
     dbmanager.cpp \
     mainwidget.cpp \
     signupwidget.cpp \
+    texteditwidget.cpp \
     userlogin.cpp
 
 HEADERS += \
     dbmanager.hpp \
     mainwidget.hpp \
     signupwidget.hpp \
+    texteditwidget.hpp \
     userlogin.hpp
 
 # Default rules for deployment.

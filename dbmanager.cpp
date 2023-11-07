@@ -74,26 +74,34 @@ bool DbManager::addPerson(const QString& username,const QString& password)
     return success;
 }
 
-void DbManager::printAllPersons() const
+QString DbManager::getUserDocumentText(int id) const
 {
-    qDebug() << "Persons in db:";
-    QSqlQuery query("SELECT * FROM people");
-    int idName = query.record().indexOf("name");
-    int idSalary = query.record().indexOf("salary");
-    while (query.next())
-    {
-        QString name = query.value(idName).toString();
-        QString salary = query.value(idSalary).toString();
-        qDebug() << "===" << name << "---" << salary;
+    QSqlQuery query("SELECT document FROM people WHERE id = (:id)");
+    query.bindValue(":id",id);
+
+    if (query.exec()) {
+        return query.value(0).toString();
+    }
+    else{
+        qDebug() << "Query execution error: " << query.lastError().text();
+        return ""; // Return an empty string or a default value in case of a query error
     }
 }
 
-bool DbManager::personExists(const QString& username, const QString& password) const
+bool DbManager::setUserDocumentText(const QString &plainText, int id)
 {
-    bool exists = false;
+    QSqlQuery setQuery;
+    setQuery.prepare("UPDATE people SET text = :userText WHERE id = :userId");
+    setQuery.bindValue(":userText", plainText);
+    setQuery.bindValue(":userId", id);
 
+    return setQuery.exec();
+}
+
+std::optional<int> DbManager::personExists(const QString& username, const QString& password) const
+{
     QSqlQuery checkQuery;
-    checkQuery.prepare("SELECT * FROM people WHERE username = (:username) AND password = (:password)");
+    checkQuery.prepare("SELECT id FROM people WHERE username = (:username) AND password = (:password)");
     checkQuery.bindValue(":username", username);
     checkQuery.bindValue(":password", password);
 
@@ -101,7 +109,7 @@ bool DbManager::personExists(const QString& username, const QString& password) c
     {
         if (checkQuery.next())
         {
-            exists = true;
+            return checkQuery.value(0).toInt();
         }
     }
     else
@@ -109,7 +117,7 @@ bool DbManager::personExists(const QString& username, const QString& password) c
         qDebug() << "person exists failed: " << checkQuery.lastError();
     }
 
-    return exists;
+    return std::nullopt;
 }
 
 bool DbManager::removeAllPersons()

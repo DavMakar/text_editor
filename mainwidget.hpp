@@ -2,7 +2,7 @@
 #define MAINWIDGET_HPP
 
 #include <QWidget>
-#include <QStackedLayout>
+#include <QStackedWidget>
 #include "dbmanager.hpp"
 
 class MainWidget : public QWidget
@@ -12,12 +12,15 @@ public:
     explicit MainWidget(QWidget *parent = nullptr);
 
 private:
+    int userId;
     DbManager db;
-    QStackedLayout* stkLayout;
+    QStackedWidget* stkWidget;
 
 public slots:
+    void saveText(const QString& text);
     void showSignIn();
     void showSignUp();
+    void showTextEdit();
     void checkUser(const QString& username, const QString& password);
     void createUser(const QString& username, const QString& password);
 };
