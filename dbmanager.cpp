@@ -76,13 +76,28 @@ bool DbManager::addPerson(const QString& username,const QString& password)
 
 QString DbManager::getUserDocumentText(int id) const
 {
-    QSqlQuery query("SELECT document FROM people WHERE id = (:id)");
-    query.bindValue(":id",id);
+//    QSqlQuery testQuery;
+//    testQuery.prepare("INSERT INTO test(testcol) VALUES(:val)");
+//    testQuery.bindValue(":val", someQStringObj);
+//    testQuery.exec();
 
-    if (query.exec()) {
-        return query.value(0).toString();
+//    QSqlQuery query("SELECT document FROM people WHERE id = (:id)");
+
+
+
+    QSqlQuery query;
+    query.prepare("SELECT document FROM people WHERE id = (:id)");
+    query.bindValue(":id", id);
+    query.exec();
+    if (query.first())
+    {
+        QString ret = query.value(0).toString();
+        qDebug()  << "RET ->"<< ret;
+        return ret;
+//        return query.value(0).toString();
     }
-    else{
+    else
+    {
         qDebug() << "Query execution error: " << query.lastError().text();
         return ""; // Return an empty string or a default value in case of a query error
     }
@@ -91,7 +106,7 @@ QString DbManager::getUserDocumentText(int id) const
 bool DbManager::setUserDocumentText(const QString &plainText, int id)
 {
     QSqlQuery setQuery;
-    setQuery.prepare("UPDATE people SET text = :userText WHERE id = :userId");
+    setQuery.prepare("UPDATE people SET document = :userText WHERE id = :userId");
     setQuery.bindValue(":userText", plainText);
     setQuery.bindValue(":userId", id);
 
