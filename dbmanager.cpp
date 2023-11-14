@@ -46,6 +46,16 @@ bool DbManager::createTable()
     return success;
 }
 
+void DbManager::close()
+{
+    m_db.close();
+}
+
+QSqlDatabase &DbManager::getDb()
+{
+    return m_db;
+}
+
 bool DbManager::addPerson(const QString& username,const QString& password)
 {
     bool success = false;
@@ -76,32 +86,18 @@ bool DbManager::addPerson(const QString& username,const QString& password)
 
 QString DbManager::getUserDocumentText(int id) const
 {
-//    QSqlQuery testQuery;
-//    testQuery.prepare("INSERT INTO test(testcol) VALUES(:val)");
-//    testQuery.bindValue(":val", someQStringObj);
-//    testQuery.exec();
-
-//    QSqlQuery query("SELECT document FROM people WHERE id = (:id)");
-
-
-
     QSqlQuery query;
     query.prepare("SELECT document FROM people WHERE id = (:id)");
     query.bindValue(":id", id);
     query.exec();
     if (query.first())
     {
-        QString ret = query.value(0).toString();
-        qDebug()  << "RET ->"<< ret;
-        return ret;
-//        return query.value(0).toString();
+        return query.value(0).toString();
     }
-    else
-    {
-        qDebug() << "Query execution error: " << query.lastError().text();
-        return ""; // Return an empty string or a default value in case of a query error
-    }
+    qDebug() << "Query execution error: " << query.lastError().text();
+    return "";
 }
+
 
 bool DbManager::setUserDocumentText(const QString &plainText, int id)
 {

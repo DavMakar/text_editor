@@ -12,7 +12,8 @@ public:
 
     bool isOpen() const;
     bool createTable();
-
+    void close();
+    QSqlDatabase& getDb();
     bool addPerson(const QString& username,const QString& password);
     std::optional<int> personExists(const QString& username,const QString& password) const;
 

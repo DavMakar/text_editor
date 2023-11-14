@@ -11,11 +11,9 @@ MainWidget::MainWidget(QWidget *parent)
     setWindowTitle("Text Editor");
     UserLogin* signInPage = new UserLogin(this);
     SignUpWidget* signUpPage = new SignUpWidget(this);
-    TextEditWidget* textEditPage = new TextEditWidget(this);
 
     stkWidget->addWidget(signInPage);
     stkWidget->addWidget(signUpPage);
-    stkWidget->addWidget(textEditPage);
 
     QVBoxLayout* vLayout = new QVBoxLayout;
     vLayout->addWidget(stkWidget);
@@ -24,7 +22,7 @@ MainWidget::MainWidget(QWidget *parent)
     connect(signInPage,&UserLogin::signInSignal, this, &MainWidget::checkUser);
     connect(signInPage,&UserLogin::signUpSignal, this, &MainWidget::showSignUp);
     connect(signUpPage,&SignUpWidget::createAccountSignal, this, &MainWidget::createUser);
-    connect(textEditPage,&TextEditWidget::saveSignal, this, &MainWidget::saveText);
+
 }
 
 void MainWidget::showSignIn()
@@ -54,15 +52,10 @@ void MainWidget::checkUser(const QString& username , const QString& password){
     auto personId = db.personExists(username,password);
     if(personId){
         userId = personId.value();
+        TextEditWidget* textEdit = new TextEditWidget(userId, db.getDb() ,this);
+        stkWidget->addWidget(textEdit);
+        connect(textEdit,&TextEditWidget::saveSignal, this, &MainWidget::saveText);
         showTextEdit();
-        QWidget *currentWidget = stkWidget->currentWidget();
-        TextEditWidget* textEdit = qobject_cast<TextEditWidget*>(currentWidget);
-        if(textEdit){
-            qDebug()<<"exav";
-            textEdit->setText(db.getUserDocumentText(userId));
-        }else{
-            qDebug()<< "chexav";
-        }
     }else{
         qDebug()<< "wrong username or password!!!";
     }
