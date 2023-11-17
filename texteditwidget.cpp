@@ -2,6 +2,7 @@
 #include <QPushButton>
 #include <QString>
 #include <QListView>
+#include <QItemSelectionModel>
 #include <QStringList>
 #include <QStringListModel>
 #include <QSqlRecord>
@@ -29,6 +30,9 @@ TextEditWidget::TextEditWidget(int id, QSqlDatabase& db ,QWidget *parent)
     QListView *listView = new QListView(this);
     listView->setModel(slModel);
 
+    QItemSelectionModel* selectionModel = new QItemSelectionModel(slModel);
+    listView->setSelectionModel(selectionModel);
+
     QPushButton* saveButton = new QPushButton("Save", this);
 
     QGridLayout* gridLayout = new QGridLayout(this);
@@ -40,6 +44,16 @@ TextEditWidget::TextEditWidget(int id, QSqlDatabase& db ,QWidget *parent)
     setLayout(gridLayout);
 
     connect(saveButton,&QPushButton::clicked, this, &TextEditWidget::saveButtonClicked);
+    connect(selectionModel,&QItemSelectionModel::selectionChanged,
+    [=](const QItemSelection &selected, const QItemSelection &deselected){
+        QModelIndexList indexes = selectionModel->selectedIndexes();
+        if (!indexes.isEmpty()) {
+            int selectedColumn = indexes.first().row();
+            QSqlRecord record = model_->record(0);
+            QVariant data = record.value(selectedColumn+1);
+            textEdit_->setText(data.toString());
+        }
+    });
 }
 
 void TextEditWidget::setText(const QString& plainText)
