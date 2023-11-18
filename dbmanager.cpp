@@ -135,6 +135,7 @@ bool DbManager::removeAllPersons()
 {
     bool success = false;
 
+
     QSqlQuery removeQuery;
     removeQuery.prepare("DELETE FROM people");
 

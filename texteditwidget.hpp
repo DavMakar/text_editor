@@ -6,6 +6,7 @@
 #include <QString>
 #include <QSqlDatabase>
 #include <QSqlTableModel>
+#include <QStringListModel>
 
 class TextEditWidget : public QWidget
 {
@@ -15,7 +16,10 @@ public:
     void setText(const QString&);
     void setId(int id);
 private:
-    QString getColumnName(int col);
+    QString getConcreteColumnName(int col);
+    QStringList getColumnNameList();
+    QStringListModel    getStrListModel();
+    void updateTable(int col);
 signals:
     void saveSignal(QString);
 private slots:

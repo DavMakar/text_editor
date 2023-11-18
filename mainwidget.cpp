@@ -54,7 +54,7 @@ void MainWidget::checkUser(const QString& username , const QString& password){
         userId = personId.value();
         TextEditWidget* textEdit = new TextEditWidget(userId, db.getDb() ,this);
         stkWidget->addWidget(textEdit);
-        connect(textEdit,&TextEditWidget::saveSignal, this, &MainWidget::saveText);
+//        connect(textEdit,&TextEditWidget::saveSignal, this, &MainWidget::saveText);
         showTextEdit();
     }else{
         qDebug()<< "wrong username or password!!!";

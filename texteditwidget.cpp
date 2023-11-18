@@ -4,7 +4,6 @@
 #include <QListView>
 #include <QItemSelectionModel>
 #include <QStringList>
-#include <QStringListModel>
 #include <QSqlRecord>
 #include <QGridLayout>
 
@@ -20,10 +19,7 @@ TextEditWidget::TextEditWidget(int id, QSqlDatabase& db ,QWidget *parent)
     model_->setTable(tableName);
     model_->select();
 
-    QStringList columnNames;
-    for(int i = 1; i < model_->columnCount() ; ++i){
-        columnNames.push_back(getColumnName(i));
-    }
+    QStringList columnNames = getColumnNameList();
 
     QStringListModel* slModel = new QStringListModel(columnNames,this);
 
@@ -45,15 +41,34 @@ TextEditWidget::TextEditWidget(int id, QSqlDatabase& db ,QWidget *parent)
 
     connect(saveButton,&QPushButton::clicked, this, &TextEditWidget::saveButtonClicked);
     connect(selectionModel,&QItemSelectionModel::selectionChanged,
-    [=](const QItemSelection &selected, const QItemSelection &deselected){
-        QModelIndexList indexes = selectionModel->selectedIndexes();
-        if (!indexes.isEmpty()) {
-            int selectedColumn = indexes.first().row();
-            QSqlRecord record = model_->record(0);
-            QVariant data = record.value(selectedColumn+1);
-            textEdit_->setText(data.toString());
-        }
-    });
+            [=](const QItemSelection &selected, const QItemSelection &deselected){
+                QModelIndexList deselectedIndexes = deselected.indexes();
+                if(!deselectedIndexes.isEmpty()){
+                    int deselectedColumn = deselectedIndexes.first().row();
+                    updateTable(deselectedColumn + 1);  // stex harc a arajanum auto save
+                        // te asenq qani hat column ka
+                        // etqan textEdit pahenq
+                }
+
+                QModelIndexList selectedIndexes = selected.indexes();
+                if (!selectedIndexes.isEmpty()) {
+                    int selectedColumn = selectedIndexes.first().row();
+                    QSqlRecord record = model_->record(0);
+                    QVariant data = record.value(selectedColumn+1);
+                    textEdit_->setText(data.toString());
+                }
+            });
+}
+
+QStringList TextEditWidget::getColumnNameList()
+{
+    QStringList columnNames;
+
+    for(int i = 1; i < model_->columnCount() ; ++i){
+        columnNames.push_back(getConcreteColumnName(i));
+    }
+
+    return columnNames;
 }
 
 void TextEditWidget::setText(const QString& plainText)
@@ -66,9 +81,14 @@ void TextEditWidget::setId(int id)
     userId_ = id;
 }
 
-QString TextEditWidget::getColumnName(int col)
+QString TextEditWidget::getConcreteColumnName(int col)
 {
     return model_->record().fieldName(col);
+}
+
+void TextEditWidget::updateTable(int col){
+    model_->setData(model_->index(0,col),textEdit_->toPlainText());
+    model_->submitAll();
 }
 
 void TextEditWidget::saveButtonClicked()
