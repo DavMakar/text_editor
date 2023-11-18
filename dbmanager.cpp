@@ -3,6 +3,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlRecord>
+#include "passwordmanager.hpp"
 
 DbManager::DbManager()
 {
@@ -63,9 +64,10 @@ bool DbManager::addPerson(const QString& username,const QString& password)
     if (!username.isEmpty())
     {
         QSqlQuery queryAdd;
+        QString encryptedPassword = PasswordManager::encrypt(password);
         queryAdd.prepare("INSERT INTO people (username,password) VALUES (:username,:password)");
         queryAdd.bindValue(":username", username);
-        queryAdd.bindValue(":password", password);
+        queryAdd.bindValue(":password", encryptedPassword);
 
         if(queryAdd.exec())
         {
@@ -112,9 +114,12 @@ bool DbManager::setUserDocumentText(const QString &plainText, int id)
 std::optional<int> DbManager::personExists(const QString& username, const QString& password) const
 {
     QSqlQuery checkQuery;
+
+    QString encryptedPassword = PasswordManager::encrypt(password);
+
     checkQuery.prepare("SELECT id FROM people WHERE username = (:username) AND password = (:password)");
     checkQuery.bindValue(":username", username);
-    checkQuery.bindValue(":password", password);
+    checkQuery.bindValue(":password", encryptedPassword);
 
     if (checkQuery.exec())
     {

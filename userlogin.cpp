@@ -42,7 +42,8 @@ UserLogin::UserLogin(QWidget *parent)
     connect(signUp, &QPushButton::clicked , this , &UserLogin::signUpClicked);
 }
 
-void UserLogin::signInClicked(){
+void UserLogin::signInClicked()
+{
     emit signInSignal(usernameLineEdit->text(), passwordLineEdit->text());
 }
 

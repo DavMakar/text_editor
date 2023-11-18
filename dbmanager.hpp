@@ -4,6 +4,7 @@
 #include <QSqlDatabase>
 #include <QString>
 
+
 class DbManager
 {
 public:

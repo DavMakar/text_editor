@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QLineEdit>
+#include "passwordmanager.hpp"
 
 class UserLogin : public QWidget
 {

@@ -12,6 +12,7 @@ SOURCES += \
     main.cpp \
     dbmanager.cpp \
     mainwidget.cpp \
+    passwordmanager.cpp \
     signupwidget.cpp \
     texteditwidget.cpp \
     userlogin.cpp
@@ -19,6 +20,7 @@ SOURCES += \
 HEADERS += \
     dbmanager.hpp \
     mainwidget.hpp \
+    passwordmanager.hpp \
     signupwidget.hpp \
     texteditwidget.hpp \
     userlogin.hpp
