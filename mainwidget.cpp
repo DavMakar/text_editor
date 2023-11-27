@@ -39,7 +39,7 @@ void MainWidget::showTextEdit(){
 }
 
 void MainWidget::createUser(const QString& username, const QString& password){
-    if(db.addPerson(username,password)){
+    if(dbFacade.addUser(username,password)){
         qDebug() << "account created succesfully";
         showSignIn();
         qDebug()<< "please login";
@@ -49,10 +49,10 @@ void MainWidget::createUser(const QString& username, const QString& password){
 }
 
 void MainWidget::checkUser(const QString& username , const QString& password){
-    auto personId = db.personExists(username,password);
+    auto personId = dbFacade.authenticateUser(username,password);
     if(personId){
         userId = personId.value();
-        TextEditWidget* textEdit = new TextEditWidget(userId, db.getDb() ,this);
+        TextEditWidget* textEdit = new TextEditWidget(userId, dbFacade ,this);
         stkWidget->addWidget(textEdit);
 //        connect(textEdit,&TextEditWidget::saveSignal, this, &MainWidget::saveText);
         showTextEdit();
@@ -61,10 +61,10 @@ void MainWidget::checkUser(const QString& username , const QString& password){
     }
 }
 
-void MainWidget::saveText(const QString& plainText){
-    if(db.setUserDocumentText(plainText,userId)){
-        qDebug() << "saved to db";
-    }else{
-        qDebug() << "error can't save";
-    }
-}
+//void MainWidget::saveText(const QString& plainText){
+//    if(dbFacade.updateFile(plainText,userId)){
+//        qDebug() << "saved to db";
+//    }else{
+//        qDebug() << "error can't save";
+//    }
+//}

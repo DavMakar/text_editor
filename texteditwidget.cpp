@@ -4,29 +4,28 @@
 #include <QListView>
 #include <QItemSelectionModel>
 #include <QStringList>
+#include <QStringListModel>
 #include <QSqlRecord>
 #include <QGridLayout>
+#include "dbfacade.hpp"
 
-TextEditWidget::TextEditWidget(int id, QSqlDatabase& db ,QWidget *parent)
-    : userId_(id), db_(db), textEdit_{new QTextEdit(this)},QWidget{parent}
+TextEditWidget::TextEditWidget(int id, DBFacade& dbFacade ,QWidget *parent)
+    : userId_(id), dbFacade(dbFacade), textEdit_{new QTextEdit(this)},QWidget{parent}
 {
     textEdit_->setFixedSize(400,300);
 
+    QStringList userFilenames = dbFacade.getUserFilenames(userId_);
+    if(userFilenames.isEmpty()){
+        dbFacade.addFile("unknown","",userId_);
+        userFilenames << "unknown";
+    }
 
-    QString tableName = QStringLiteral("user%1").arg(userId_);
-
-    model_ = new QSqlTableModel(this,db_);
-    model_->setTable(tableName);
-    model_->select();
-
-    QStringList columnNames = getColumnNameList();
-
-    QStringListModel* slModel = new QStringListModel(columnNames,this);
+    slModel_ = new QStringListModel(userFilenames,this);
 
     QListView *listView = new QListView(this);
-    listView->setModel(slModel);
+    listView->setModel(slModel_);
 
-    QItemSelectionModel* selectionModel = new QItemSelectionModel(slModel);
+    selectionModel = new QItemSelectionModel(slModel_);
     listView->setSelectionModel(selectionModel);
 
     QPushButton* saveButton = new QPushButton("Save", this);
@@ -40,35 +39,7 @@ TextEditWidget::TextEditWidget(int id, QSqlDatabase& db ,QWidget *parent)
     setLayout(gridLayout);
 
     connect(saveButton,&QPushButton::clicked, this, &TextEditWidget::saveButtonClicked);
-    connect(selectionModel,&QItemSelectionModel::selectionChanged,
-            [=](const QItemSelection &selected, const QItemSelection &deselected){
-                QModelIndexList deselectedIndexes = deselected.indexes();
-                if(!deselectedIndexes.isEmpty()){
-                    int deselectedColumn = deselectedIndexes.first().row();
-                    updateTable(deselectedColumn + 1);  // stex harc a arajanum auto save
-                        // te asenq qani hat column ka
-                        // etqan textEdit pahenq
-                }
-
-                QModelIndexList selectedIndexes = selected.indexes();
-                if (!selectedIndexes.isEmpty()) {
-                    int selectedColumn = selectedIndexes.first().row();
-                    QSqlRecord record = model_->record(0);
-                    QVariant data = record.value(selectedColumn+1);
-                    textEdit_->setText(data.toString());
-                }
-            });
-}
-
-QStringList TextEditWidget::getColumnNameList()
-{
-    QStringList columnNames;
-
-    for(int i = 1; i < model_->columnCount() ; ++i){
-        columnNames.push_back(getConcreteColumnName(i));
-    }
-
-    return columnNames;
+    connect(selectionModel,&QItemSelectionModel::selectionChanged , this , &TextEditWidget::selectionChangedSlot);
 }
 
 void TextEditWidget::setText(const QString& plainText)
@@ -81,17 +52,31 @@ void TextEditWidget::setId(int id)
     userId_ = id;
 }
 
-QString TextEditWidget::getConcreteColumnName(int col)
+QString TextEditWidget::filenameFromIndex(const QModelIndex &index)
 {
-    return model_->record().fieldName(col);
+    if(index.isValid()){
+        return slModel_->data(index, Qt::DisplayRole).toString();
+    }
+    return QString();
 }
 
-void TextEditWidget::updateTable(int col){
-    model_->setData(model_->index(0,col),textEdit_->toPlainText());
-    model_->submitAll();
-}
 
 void TextEditWidget::saveButtonClicked()
 {
-    emit saveSignal(textEdit_->toPlainText());
+    dbFacade.updateFile(filenameFromIndex(selectionModel->currentIndex()),textEdit_->toPlainText(),userId_);
+}
+
+void TextEditWidget::selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected)
+{
+    QModelIndexList deselectedIndexes = deselected.indexes();
+    if(!deselectedIndexes.isEmpty()){
+        QString deselectedFilename = filenameFromIndex(deselectedIndexes.first());
+        dbFacade.updateFile(deselectedFilename,textEdit_->toPlainText(), userId_);
+    }
+    QModelIndexList selectedIndexes = selected.indexes();
+    if (!selectedIndexes.isEmpty()) {
+        QString selectedFilename = filenameFromIndex(selectedIndexes.first());
+        QString fileContent = dbFacade.getFileContent(selectedFilename,userId_);
+        textEdit_->setText(fileContent);
+    }
 }

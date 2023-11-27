@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QStackedWidget>
-#include "dbmanager.hpp"
+#include "dbfacade.hpp"
 
 class MainWidget : public QWidget
 {
@@ -13,11 +13,11 @@ public:
 
 private:
     int userId;
-    DbManager db;
+    DBFacade dbFacade;
     QStackedWidget* stkWidget;
 
 public slots:
-    void saveText(const QString& text);
+    //void saveText(const QString& text);
     void showSignIn();
     void showSignUp();
     void showTextEdit();

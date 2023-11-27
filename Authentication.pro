@@ -9,8 +9,8 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    dbfacade.cpp \
     main.cpp \
-    dbmanager.cpp \
     mainwidget.cpp \
     passwordmanager.cpp \
     signupwidget.cpp \
@@ -18,7 +18,7 @@ SOURCES += \
     userlogin.cpp
 
 HEADERS += \
-    dbmanager.hpp \
+    dbfacade.hpp \
     mainwidget.hpp \
     passwordmanager.hpp \
     signupwidget.hpp \

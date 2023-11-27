@@ -5,31 +5,36 @@
 #include <QTextEdit>
 #include <QString>
 #include <QSqlDatabase>
-#include <QSqlTableModel>
-#include <QStringListModel>
+
+class DBFacade;
+class QItemSelection;
+class QStringListModel;
+class QItemSelectionModel;
 
 class TextEditWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextEditWidget(int id , QSqlDatabase& db, QWidget *parent = nullptr);
+    explicit TextEditWidget(int id , DBFacade& dbFacade, QWidget *parent = nullptr);
     void setText(const QString&);
     void setId(int id);
+
 private:
-    QString getConcreteColumnName(int col);
-    QStringList getColumnNameList();
-    QStringListModel    getStrListModel();
-    void updateTable(int col);
+    QString filenameFromIndex(const QModelIndex& index);
+
 signals:
     void saveSignal(QString);
 private slots:
     void saveButtonClicked();
+    void selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
+
 
 private:
     int userId_;
     QTextEdit* textEdit_;
-    QSqlDatabase& db_;
-    QSqlTableModel* model_;
+    DBFacade& dbFacade;
+    QStringListModel* slModel_;
+    QItemSelectionModel* selectionModel;
 };
 
 #endif // TEXTEDITWIDGET_HPP
