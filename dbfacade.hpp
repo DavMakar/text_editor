@@ -3,7 +3,6 @@
 
 #include <QSqlDatabase>
 
-
 class DBFacade
 {
 public:

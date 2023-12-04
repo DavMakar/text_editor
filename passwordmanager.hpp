@@ -5,15 +5,13 @@
 #include <QByteArray>
 #include <QString>
 
-
 class PasswordManager
 {
-    public:
-        static QString  encrypt(QString password);
-        static bool isEqualPasswords(QString pass1, QString hashedPass2);
-    private:
-      static const  QCryptographicHash::Algorithm   algo = QCryptographicHash::Algorithm::Sha224;
-
+public:
+    static QString  encrypt(QString password);
+    static bool isEqualPasswords(QString pass1, QString hashedPass2);
+private:
+    static const  QCryptographicHash::Algorithm   algo = QCryptographicHash::Algorithm::Sha224;
 };
 
 #endif // PASSWORDMANAGER_H

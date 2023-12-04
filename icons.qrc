@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/editor_icons">
+        <file>icons/delete.png</file>
+        <file>icons/newFile.png</file>
+        <file>icons/newFile2.png</file>
+        <file>icons/redo.png</file>
+        <file>icons/save.png</file>
+        <file>icons/save2.png</file>
+        <file>icons/undo.png</file>
+    </qresource>
+</RCC>

@@ -174,3 +174,8 @@ QString DBFacade::getFileContent(const QString &filename, int userId)
     return content;
 }
 
+//QSqlTableModel* DBFacade::getUserFilenameModel()
+//{
+//    QSqlTableModel* model = new QSqlTableModel(nullptdb)
+//}
+

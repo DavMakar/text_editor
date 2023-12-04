@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include <QString>
 #include <QSqlDatabase>
+#include <QModelIndex>
 
 class DBFacade;
 class QItemSelection;
@@ -25,14 +26,21 @@ private:
 signals:
     void saveSignal(QString);
 private slots:
-    void saveButtonClicked();
-    void selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
+    void setOldFilenameSlot(const QModelIndex& index);
+    void updateFilenameSlot(QWidget* editor);
+    void createNewFileSlot();
+    void saveFileSlot();
+    void deleteSlot();
+    void undoSlot();
+    void redoSlot();
 
+    void selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
     int userId_;
-    QTextEdit* textEdit_;
     DBFacade& dbFacade;
+    QString oldFilename;
+    QTextEdit* textEdit_;
     QStringListModel* slModel_;
     QItemSelectionModel* selectionModel;
 };

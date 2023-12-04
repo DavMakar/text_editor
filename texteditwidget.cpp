@@ -1,13 +1,19 @@
 #include "texteditwidget.hpp"
-#include <QPushButton>
+
 #include <QString>
 #include <QListView>
+#include <QLineEdit>
 #include <QItemSelectionModel>
 #include <QStringList>
 #include <QStringListModel>
-#include <QSqlRecord>
 #include <QGridLayout>
+
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
 #include "dbfacade.hpp"
+#include "filenamedelegate.hpp"
+#include "editortoolbar.hpp"
 
 TextEditWidget::TextEditWidget(int id, DBFacade& dbFacade ,QWidget *parent)
     : userId_(id), dbFacade(dbFacade), textEdit_{new QTextEdit(this)},QWidget{parent}
@@ -16,29 +22,44 @@ TextEditWidget::TextEditWidget(int id, DBFacade& dbFacade ,QWidget *parent)
 
     QStringList userFilenames = dbFacade.getUserFilenames(userId_);
     if(userFilenames.isEmpty()){
-        dbFacade.addFile("unknown","",userId_);
-        userFilenames << "unknown";
+        dbFacade.addFile("newfile","",userId_);
+        userFilenames << "newfile";
     }
 
     slModel_ = new QStringListModel(userFilenames,this);
 
-    QListView *listView = new QListView(this);
-    listView->setModel(slModel_);
+    FilenameDelegate* flnameDelegate = new FilenameDelegate;
+
+    QListView* flnameView = new QListView(this); /// TODO FilenameView class
+    flnameView->setModel(slModel_);
+    flnameView->setItemDelegate(flnameDelegate);
 
     selectionModel = new QItemSelectionModel(slModel_);
-    listView->setSelectionModel(selectionModel);
+    flnameView->setSelectionModel(selectionModel);
 
-    QPushButton* saveButton = new QPushButton("Save", this);
+    EditorToolBar* editBar = new EditorToolBar;
 
-    QGridLayout* gridLayout = new QGridLayout(this);
-    gridLayout->setHorizontalSpacing(10);
-    gridLayout->addWidget(listView, 0, 0, 1, 1);
-    gridLayout->addWidget(textEdit_, 0, 1, 1, 1);
-    gridLayout->addWidget(saveButton, 1, 1, 1, 1);
+    QVBoxLayout* vlayout = new QVBoxLayout();
+    vlayout->setSpacing(5);
+    vlayout->setContentsMargins(0,0,0,0);
+    vlayout->addWidget(editBar);
 
-    setLayout(gridLayout);
+    QHBoxLayout* hlayout = new QHBoxLayout();
+    hlayout->addWidget(flnameView);
+    hlayout->addWidget(textEdit_);
 
-    connect(saveButton,&QPushButton::clicked, this, &TextEditWidget::saveButtonClicked);
+    vlayout->addLayout(hlayout);
+
+    setLayout(vlayout);
+
+    connect(editBar,&EditorToolBar::createNewFileSignal,this,&TextEditWidget::createNewFileSlot);
+    connect(editBar,&EditorToolBar::saveFileSignal,this,&TextEditWidget::saveFileSlot);
+    connect(editBar,&EditorToolBar::deleteFileSignal,this,&TextEditWidget::deleteSlot);
+    connect(editBar,&EditorToolBar::undoSignal,this,&TextEditWidget::undoSlot);
+    connect(editBar,&EditorToolBar::redoSignal,this,&TextEditWidget::redoSlot);
+
+    connect(flnameView,&QListView::doubleClicked , this , &TextEditWidget::setOldFilenameSlot);
+    connect(flnameDelegate,&FilenameDelegate::commitData , this , &TextEditWidget::updateFilenameSlot);
     connect(selectionModel,&QItemSelectionModel::selectionChanged , this , &TextEditWidget::selectionChangedSlot);
 }
 
@@ -60,10 +81,19 @@ QString TextEditWidget::filenameFromIndex(const QModelIndex &index)
     return QString();
 }
 
+/// SLOTS
 
-void TextEditWidget::saveButtonClicked()
+void TextEditWidget::setOldFilenameSlot(const QModelIndex &index)
 {
-    dbFacade.updateFile(filenameFromIndex(selectionModel->currentIndex()),textEdit_->toPlainText(),userId_);
+    oldFilename = filenameFromIndex(index);
+}
+
+void TextEditWidget::updateFilenameSlot(QWidget* editor)
+{
+    QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor);
+    if(lineEdit){
+        dbFacade.changeFilename(oldFilename,lineEdit->text(),userId_);
+    }
 }
 
 void TextEditWidget::selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected)
@@ -79,4 +109,36 @@ void TextEditWidget::selectionChangedSlot(const QItemSelection &selected, const 
         QString fileContent = dbFacade.getFileContent(selectedFilename,userId_);
         textEdit_->setText(fileContent);
     }
+}
+
+void TextEditWidget::createNewFileSlot()
+{
+    QString filename = "new";
+    dbFacade.addFile(filename,"",userId_);
+    slModel_->insertRow(slModel_->rowCount());
+    QModelIndex index = slModel_->index(slModel_->rowCount()-1);
+    slModel_->setData(index,filename);
+}
+
+void TextEditWidget::saveFileSlot()
+{
+    dbFacade.updateFile(filenameFromIndex(selectionModel->currentIndex()),textEdit_->toPlainText(),userId_);
+}
+
+void TextEditWidget::deleteSlot()
+{
+    QModelIndex index = selectionModel->currentIndex();
+    if(index.isValid()){
+        slModel_->removeRows(index.row(),1);
+    }
+}
+
+void TextEditWidget::undoSlot()
+{
+    textEdit_->undo();
+}
+
+void TextEditWidget::redoSlot()
+{
+    textEdit_->redo();
 }

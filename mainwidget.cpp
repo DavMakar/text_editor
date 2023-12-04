@@ -2,13 +2,15 @@
 #include "userlogin.hpp"
 #include "signupwidget.hpp"
 #include "texteditwidget.hpp"
-
 #include <QVBoxLayout>
 
 MainWidget::MainWidget(QWidget *parent)
     : QWidget{parent}, stkWidget{new QStackedWidget(this)}
 {
     setWindowTitle("Text Editor");
+
+    // Move Widget on the screen center
+
     UserLogin* signInPage = new UserLogin(this);
     SignUpWidget* signUpPage = new SignUpWidget(this);
 

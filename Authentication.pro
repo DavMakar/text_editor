@@ -10,22 +10,29 @@ CONFIG += c++17
 
 SOURCES += \
     dbfacade.cpp \
+    editortoolbar.cpp \
     main.cpp \
     mainwidget.cpp \
     passwordmanager.cpp \
     signupwidget.cpp \
     texteditwidget.cpp \
-    userlogin.cpp
+    userlogin.cpp \
+    filenamedelegate.cpp
 
 HEADERS += \
     dbfacade.hpp \
+    editortoolbar.hpp \
     mainwidget.hpp \
     passwordmanager.hpp \
     signupwidget.hpp \
     texteditwidget.hpp \
-    userlogin.hpp
+    userlogin.hpp \
+    filenamedelegate.hpp \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    icons.qrc
