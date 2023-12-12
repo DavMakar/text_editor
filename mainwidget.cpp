@@ -3,11 +3,13 @@
 #include "signupwidget.hpp"
 #include "texteditwidget.hpp"
 #include <QVBoxLayout>
+#include <QIcon>
 
 MainWidget::MainWidget(QWidget *parent)
     : QWidget{parent}, stkWidget{new QStackedWidget(this)}
 {
     setWindowTitle("Text Editor");
+    setWindowIcon(QIcon(":/editor_icons/icons/newFile2.png"));
 
     // Move Widget on the screen center
 
@@ -56,17 +58,8 @@ void MainWidget::checkUser(const QString& username , const QString& password){
         userId = personId.value();
         TextEditWidget* textEdit = new TextEditWidget(userId, dbFacade ,this);
         stkWidget->addWidget(textEdit);
-//        connect(textEdit,&TextEditWidget::saveSignal, this, &MainWidget::saveText);
         showTextEdit();
     }else{
         qDebug()<< "wrong username or password!!!";
     }
 }
-
-//void MainWidget::saveText(const QString& plainText){
-//    if(dbFacade.updateFile(plainText,userId)){
-//        qDebug() << "saved to db";
-//    }else{
-//        qDebug() << "error can't save";
-//    }
-//}

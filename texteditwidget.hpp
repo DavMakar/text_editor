@@ -38,7 +38,7 @@ private slots:
 
 private:
     int userId_;
-    DBFacade& dbFacade;
+    DBFacade& db;
     QString oldFilename;
     QTextEdit* textEdit_;
     QStringListModel* slModel_;

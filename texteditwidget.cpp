@@ -7,6 +7,7 @@
 #include <QStringList>
 #include <QStringListModel>
 #include <QGridLayout>
+#include <QStringLiteral>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -15,15 +16,17 @@
 #include "filenamedelegate.hpp"
 #include "editortoolbar.hpp"
 
-TextEditWidget::TextEditWidget(int id, DBFacade& dbFacade ,QWidget *parent)
-    : userId_(id), dbFacade(dbFacade), textEdit_{new QTextEdit(this)},QWidget{parent}
+TextEditWidget::TextEditWidget(int id, DBFacade& db ,QWidget *parent)
+    : userId_(id), db(db), textEdit_{new QTextEdit(this)},QWidget{parent}
 {
-    textEdit_->setFixedSize(400,300);
+    textEdit_->setMinimumSize(400,300);
 
-    QStringList userFilenames = dbFacade.getUserFilenames(userId_);
+    const QString initialFilename = QStringLiteral("Untitled");
+
+    QStringList userFilenames = db.getUserFilenames(userId_);
     if(userFilenames.isEmpty()){
-        dbFacade.addFile("newfile","",userId_);
-        userFilenames << "newfile";
+        db.addFile(initialFilename,"",userId_);
+        userFilenames << initialFilename;
     }
 
     slModel_ = new QStringListModel(userFilenames,this);
@@ -32,6 +35,7 @@ TextEditWidget::TextEditWidget(int id, DBFacade& dbFacade ,QWidget *parent)
 
     QListView* flnameView = new QListView(this); /// TODO FilenameView class
     flnameView->setModel(slModel_);
+    flnameView->setFixedWidth(100);
     flnameView->setItemDelegate(flnameDelegate);
 
     selectionModel = new QItemSelectionModel(slModel_);
@@ -92,7 +96,7 @@ void TextEditWidget::updateFilenameSlot(QWidget* editor)
 {
     QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor);
     if(lineEdit){
-        dbFacade.changeFilename(oldFilename,lineEdit->text(),userId_);
+        db.changeFilename(oldFilename,lineEdit->text(),userId_);
     }
 }
 
@@ -101,20 +105,20 @@ void TextEditWidget::selectionChangedSlot(const QItemSelection &selected, const 
     QModelIndexList deselectedIndexes = deselected.indexes();
     if(!deselectedIndexes.isEmpty()){
         QString deselectedFilename = filenameFromIndex(deselectedIndexes.first());
-        dbFacade.updateFile(deselectedFilename,textEdit_->toPlainText(), userId_);
+        db.updateFile(deselectedFilename,textEdit_->toPlainText(), userId_);
     }
     QModelIndexList selectedIndexes = selected.indexes();
     if (!selectedIndexes.isEmpty()) {
         QString selectedFilename = filenameFromIndex(selectedIndexes.first());
-        QString fileContent = dbFacade.getFileContent(selectedFilename,userId_);
+        QString fileContent = db.getFileContent(selectedFilename,userId_);
         textEdit_->setText(fileContent);
     }
 }
 
 void TextEditWidget::createNewFileSlot()
 {
-    QString filename = "new";
-    dbFacade.addFile(filename,"",userId_);
+    QString filename = "Untitled";
+    db.addFile(filename,"",userId_);
     slModel_->insertRow(slModel_->rowCount());
     QModelIndex index = slModel_->index(slModel_->rowCount()-1);
     slModel_->setData(index,filename);
@@ -122,13 +126,14 @@ void TextEditWidget::createNewFileSlot()
 
 void TextEditWidget::saveFileSlot()
 {
-    dbFacade.updateFile(filenameFromIndex(selectionModel->currentIndex()),textEdit_->toPlainText(),userId_);
+    db.updateFile(filenameFromIndex(selectionModel->currentIndex()),textEdit_->toPlainText(),userId_);
 }
 
 void TextEditWidget::deleteSlot()
 {
     QModelIndex index = selectionModel->currentIndex();
     if(index.isValid()){
+        db.removeFile(filenameFromIndex(index),userId_);
         slModel_->removeRows(index.row(),1);
     }
 }

@@ -12,7 +12,7 @@ DBFacade::DBFacade()
         qDebug()<< "Error: no connection";
     }
     else{
-        qDebug()<< "Database: connection ok";
+        qDebug()<< "Database: connection established";
     }
 }
 
