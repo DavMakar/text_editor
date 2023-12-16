@@ -1,9 +1,9 @@
-#include "dbfacade.hpp"
+#include "UserDataManager.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
 #include "passwordmanager.hpp"
 
-DBFacade::DBFacade()
+UserDataManager::UserDataManager()
 {
     db_ = QSqlDatabase::addDatabase("QSQLITE");
     db_.setDatabaseName("synopsys.db");
@@ -16,14 +16,14 @@ DBFacade::DBFacade()
     }
 }
 
-DBFacade::~DBFacade()
+UserDataManager::~UserDataManager()
 {
     if(db_.isOpen()){
         db_.close();
     }
 }
 
-bool DBFacade::addUser(const QString &username, const QString &password)
+bool UserDataManager::addUser(const QString &username, const QString &password)
 {
     if(!username.isEmpty()){
         QSqlQuery query;
@@ -45,7 +45,7 @@ bool DBFacade::addUser(const QString &username, const QString &password)
     return false;
 }
 
-std::optional<int> DBFacade::authenticateUser(const QString &username, const QString &password) const
+std::optional<int> UserDataManager::authenticateUser(const QString &username, const QString &password) const
 {
     QSqlQuery checkQuery;
 
@@ -70,7 +70,7 @@ std::optional<int> DBFacade::authenticateUser(const QString &username, const QSt
     return std::nullopt;
 }
 
-bool DBFacade::addFile(const QString &filename, const QString &content, int userId)
+bool UserDataManager::addFile(const QString &filename, const QString &content, int userId)
 {
     QSqlQuery query;
     query.prepare("INSERT INTO user_files (filename,content,userId) VALUES (:filename,:content,:userId)");
@@ -87,7 +87,7 @@ bool DBFacade::addFile(const QString &filename, const QString &content, int user
     return false;
 }
 
-bool DBFacade::updateFile(const QString &filename, const QString &content, int userId)
+bool UserDataManager::updateFile(const QString &filename, const QString &content, int userId)
 {
     QSqlQuery query;
     query.prepare("UPDATE user_files SET content = (:content)"
@@ -104,7 +104,7 @@ bool DBFacade::updateFile(const QString &filename, const QString &content, int u
     return false;
 }
 
-bool DBFacade::removeFile(const QString &filename, int userId)
+bool UserDataManager::removeFile(const QString &filename, int userId)
 {
     QSqlQuery query;
     query.prepare("DELETE FROM user_files WHERE filename = (:filename) AND userId = (:userId)");
@@ -120,7 +120,7 @@ bool DBFacade::removeFile(const QString &filename, int userId)
     return false;
 }
 
-bool DBFacade::changeFilename(const QString &oldFilename, const QString &newFilename, int userId)
+bool UserDataManager::changeFilename(const QString &oldFilename, const QString &newFilename, int userId)
 {
     QSqlQuery query;
     query.prepare("UPDATE user_files SET filename = (:newFilename)"
@@ -138,7 +138,7 @@ bool DBFacade::changeFilename(const QString &oldFilename, const QString &newFile
     
 }
 
-QStringList DBFacade::getUserFilenames(int userId)
+QStringList UserDataManager::getUserFilenames(int userId)
 {
     QStringList filenames;
     QSqlQuery query;
@@ -155,7 +155,7 @@ QStringList DBFacade::getUserFilenames(int userId)
     return filenames;
 }
 
-QString DBFacade::getFileContent(const QString &filename, int userId)
+QString UserDataManager::getFileContent(const QString &filename, int userId)
 {
     QString content;
     QSqlQuery query;
@@ -174,7 +174,7 @@ QString DBFacade::getFileContent(const QString &filename, int userId)
     return content;
 }
 
-//QSqlTableModel* DBFacade::getUserFilenameModel()
+//QSqlTableModel* UserDataManager::getUserFilenameModel()
 //{
 //    QSqlTableModel* model = new QSqlTableModel(nullptdb)
 //}

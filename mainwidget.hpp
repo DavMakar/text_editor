@@ -13,7 +13,7 @@ public:
 
 private:
     int userId;
-    DBFacade dbFacade;
+    UserDataManager dbFacade;
     QStackedWidget* stkWidget;
 
 public slots:

@@ -1,13 +1,13 @@
-#ifndef DBFACADE_HPP
-#define DBFACADE_HPP
+#ifndef USER_DATA_MANAGER_HPP
+#define USER_DATA_MANAGER_HPP
 
 #include <QSqlDatabase>
 
-class DBFacade
+class UserDataManager
 {
 public:
-    DBFacade();
-    ~DBFacade();
+    UserDataManager();
+    ~UserDataManager();
     bool addUser(const QString& username, const QString& password);
     std::optional<int> authenticateUser(const QString& username,const QString& password) const;
     bool addFile(const QString& filename, const QString& content , int userId);
@@ -20,4 +20,4 @@ private:
     QSqlDatabase db_;
 };
 
-#endif // DBFACADE_HPP
+#endif // USER_DATA_MANAGER_HPP

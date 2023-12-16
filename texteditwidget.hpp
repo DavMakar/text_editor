@@ -7,7 +7,7 @@
 #include <QSqlDatabase>
 #include <QModelIndex>
 
-class DBFacade;
+class UserDataManager;
 class QItemSelection;
 class QStringListModel;
 class QItemSelectionModel;
@@ -16,7 +16,7 @@ class TextEditWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextEditWidget(int id , DBFacade& dbFacade, QWidget *parent = nullptr);
+    explicit TextEditWidget(int id , UserDataManager& dbFacade, QWidget *parent = nullptr);
     void setText(const QString&);
     void setId(int id);
 
@@ -38,7 +38,7 @@ private slots:
 
 private:
     int userId_;
-    DBFacade& db;
+    UserDataManager& db;
     QString oldFilename;
     QTextEdit* textEdit_;
     QStringListModel* slModel_;
