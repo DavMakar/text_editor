@@ -1,7 +1,7 @@
 #include "UserDataManager.hpp"
 #include <QSqlQuery>
 #include <QSqlError>
-#include "passwordmanager.hpp"
+#include "PasswordManager.hpp"
 
 UserDataManager::UserDataManager()
 {

@@ -1,4 +1,4 @@
-#include "texteditwidget.hpp"
+#include "TextEditWidget.hpp"
 
 #include <QString>
 #include <QListView>
@@ -12,9 +12,9 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include "dbfacade.hpp"
-#include "filenamedelegate.hpp"
-#include "editortoolbar.hpp"
+#include "../Data/UserDataManager.hpp"
+#include "FileNameDelegate.hpp"
+#include "EditorToolbar.hpp"
 
 TextEditWidget::TextEditWidget(int id, UserDataManager& db ,QWidget *parent)
     : userId_(id), db(db), textEdit_{new QTextEdit(this)},QWidget{parent}

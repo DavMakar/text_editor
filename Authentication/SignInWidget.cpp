@@ -1,5 +1,4 @@
-#include "userlogin.hpp"
-
+#include "SignInWidget.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGroupBox>
@@ -7,7 +6,7 @@
 #include <QDialog>
 #include <QPushButton>
 
-UserLogin::UserLogin(QWidget *parent)
+SignInWidget::SignInWidget(QWidget *parent)
     : QWidget{parent}
 {
 
@@ -39,15 +38,15 @@ UserLogin::UserLogin(QWidget *parent)
 
     setLayout(VLayout);
 
-    connect(signIn, &QPushButton::clicked , this , &UserLogin::signInClicked);
-    connect(signUp, &QPushButton::clicked , this , &UserLogin::signUpClicked);
+    connect(signIn, &QPushButton::clicked , this , &SignInWidget::signInClicked);
+    connect(signUp, &QPushButton::clicked , this , &SignInWidget::signUpClicked);
 }
 
-void UserLogin::signInClicked()
+void SignInWidget::signInClicked()
 {
     emit signInSignal(usernameLineEdit->text(), passwordLineEdit->text());
 }
 
-void UserLogin::signUpClicked(){
+void SignInWidget::signUpClicked(){
     emit signUpSignal();
 }

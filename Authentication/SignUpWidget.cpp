@@ -1,4 +1,4 @@
-#include "signupwidget.hpp"
+#include "SignUpWidget.hpp"
 
 #include <QVBoxLayout>
 #include <QLabel>
