@@ -1,0 +1,9 @@
+{
+	"files.associations": {
+		"qlineedit": "cpp",
+		"qwidget": "cpp",
+		"optional": "cpp",
+		"qcryptographichash": "cpp",
+		"qvboxlayout": "cpp"
+	}
+}

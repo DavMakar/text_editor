@@ -1,7 +1,7 @@
-#include "mainwidget.hpp"
-#include "userlogin.hpp"
-#include "signupwidget.hpp"
-#include "texteditwidget.hpp"
+#include "MainWidget.hpp"
+#include "Authentication/SignInWidget.hpp"
+#include "Authentication/SignUpWidget.hpp"
+#include "TextEdit/TextEditWidget.hpp"
 #include <QVBoxLayout>
 #include <QIcon>
 
@@ -13,7 +13,7 @@ MainWidget::MainWidget(QWidget *parent)
 
     // Move Widget on the screen center
 
-    UserLogin* signInPage = new UserLogin(this);
+    SignInWidget* signInPage = new SignInWidget(this);
     SignUpWidget* signUpPage = new SignUpWidget(this);
 
     stkWidget->addWidget(signInPage);
@@ -23,8 +23,8 @@ MainWidget::MainWidget(QWidget *parent)
     vLayout->addWidget(stkWidget);
 
     setLayout(vLayout);
-    connect(signInPage,&UserLogin::signInSignal, this, &MainWidget::checkUser);
-    connect(signInPage,&UserLogin::signUpSignal, this, &MainWidget::showSignUp);
+    connect(signInPage,&SignInWidget::signInSignal, this, &MainWidget::checkUser);
+    connect(signInPage,&SignInWidget::signUpSignal, this, &MainWidget::showSignUp);
     connect(signUpPage,&SignUpWidget::createAccountSignal, this, &MainWidget::createUser);
 
 }

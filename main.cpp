@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <QDebug>
-#include "mainwidget.hpp"
+#include "MainWidget.hpp"
 
 int main(int argc, char *argv[])
 {

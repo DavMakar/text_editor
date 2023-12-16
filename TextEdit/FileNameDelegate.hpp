@@ -1,5 +1,5 @@
-#ifndef FILENAMEDELEGATE_HPP
-#define FILENAMEDELEGATE_HPP
+#ifndef FILENAME_DELEGATE_HPP
+#define FILENAME_DELEGATE_HPP
 
 #include <QStyledItemDelegate>
 
@@ -16,4 +16,4 @@ public:
 //    void updateFilename(const QString& filename) const;
 };
 
-#endif // FILENAMEDELEGATE_HPP
+#endif // FILENAME_DELEGATE_HPP

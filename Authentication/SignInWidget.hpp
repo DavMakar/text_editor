@@ -1,15 +1,14 @@
-#ifndef USERLOGIN_HPP
-#define USERLOGIN_HPP
+#ifndef SIGN_IN_WIDGET_HPP
+#define SIGN_IN_WIDGET_HPP
 
 #include <QWidget>
 #include <QLineEdit>
-#include "passwordmanager.hpp"
 
-class UserLogin : public QWidget
+class SignInWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit UserLogin(QWidget *parent = nullptr);
+    explicit SignInWidget(QWidget *parent = nullptr);
 
 signals:
     void signInSignal(const QString& username,const QString& password);
@@ -24,4 +23,4 @@ private:
     QLineEdit* passwordLineEdit;
 };
 
-#endif // USERLOGIN_HPP
+#endif // SIGN_IN_WIDGET_HPP

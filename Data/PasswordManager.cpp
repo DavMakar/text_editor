@@ -1,4 +1,4 @@
-#include "passwordmanager.hpp"
+#include "PasswordManager.hpp"
 
 QString  PasswordManager::encrypt(QString password)
 {

@@ -1,4 +1,4 @@
-#include "filenamedelegate.hpp"
+#include "FileNameDelegate.hpp"
 #include <QLineEdit>
 
 FilenameDelegate::FilenameDelegate(QObject *parent)

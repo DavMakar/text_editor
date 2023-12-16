@@ -9,26 +9,27 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    dbfacade.cpp \
-    editortoolbar.cpp \
     main.cpp \
-    mainwidget.cpp \
-    passwordmanager.cpp \
-    signupwidget.cpp \
-    texteditwidget.cpp \
-    userlogin.cpp \
-    filenamedelegate.cpp
+    MainWidget.cpp \
+    Authentication/SignUpWidget.cpp \
+    Authentication/SignInWidget.cpp \
+    Data/UserDataManager.cpp \
+    Data/PasswordManager.cpp \
+    TextEdit/EditorToolbar.cpp \
+    TextEdit/FileNameDelegate.cpp \
+    TextEdit/TextEditWidget.cpp \
+
 
 HEADERS += \
-    dbfacade.hpp \
-    editortoolbar.hpp \
-    mainwidget.hpp \
-    passwordmanager.hpp \
-    signupwidget.hpp \
-    texteditwidget.hpp \
-    userlogin.hpp \
-    filenamedelegate.hpp \
-
+    MainWidget.hpp \
+   	Authentication/SignUpWidget.hpp \
+    Authentication/SignInWidget.hpp \
+    Data/UserDataManager.hpp \
+    Data/PasswordManager.hpp \
+    TextEdit/EditorToolbar.hpp \
+    TextEdit/FileNameDelegate.hpp \
+    TextEdit/TextEditWidget.hpp \
+    
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

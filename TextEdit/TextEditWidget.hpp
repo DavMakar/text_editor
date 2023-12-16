@@ -1,5 +1,5 @@
-#ifndef TEXTEDITWIDGET_HPP
-#define TEXTEDITWIDGET_HPP
+#ifndef TEXT_EDIT_WIDGET_HPP
+#define TEXT_EDIT_WIDGET_HPP
 
 #include <QWidget>
 #include <QTextEdit>
@@ -45,4 +45,4 @@ private:
     QItemSelectionModel* selectionModel;
 };
 
-#endif // TEXTEDITWIDGET_HPP
+#endif // TEXT_EDIT_WIDGET_HPP
