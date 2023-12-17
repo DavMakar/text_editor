@@ -69,19 +69,34 @@ std::optional<int> UserDataManager::authenticateUser(const QString &username, co
 
     return std::nullopt;
 }
-
-bool UserDataManager::addFile(const QString &filename, const QString &content, int userId)
+/////////////////////////////////////////////////////////////////////////////////////////////
+bool UserDataManager::addFile(QString &filename, const QString &content, int userId)
 {
+    QStringList filenamesOfUser = getUserFilenames(userId);
+
+    QString tempFileName = QString(filename);
+    for (size_t index = 0; ; ++index)
+    {
+        if (std::find(filenamesOfUser.begin(), filenamesOfUser.end(), tempFileName) == filenamesOfUser.end())
+        {
+            break;
+        }
+        tempFileName = filename + QString("(") + QString::number(index) + QString(")");
+    }
+	filename = tempFileName;
+
     QSqlQuery query;
     query.prepare("INSERT INTO user_files (filename,content,userId) VALUES (:filename,:content,:userId)");
-    query.bindValue(":filename" ,filename);
-    query.bindValue(":content" ,content);
-    query.bindValue(":userId" ,userId);
+    query.bindValue(":filename", filename);
+    query.bindValue(":content", content);
+    query.bindValue(":userId", userId);
 
-    if(query.exec()){
+    if (query.exec())
+    {
         return true;
     }
-    else{
+    else
+    {
         qDebug() << "add file failed" << query.lastError();
     }
     return false;
@@ -137,7 +152,7 @@ bool UserDataManager::changeFilename(const QString &oldFilename, const QString &
     return false;
     
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 QStringList UserDataManager::getUserFilenames(int userId)
 {
     QStringList filenames;

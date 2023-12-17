@@ -19,7 +19,8 @@
 TextEditWidget::TextEditWidget(int id, UserDataManager& db ,QWidget *parent)
     : userId_(id), db(db), textEdit_{new QTextEdit(this)},QWidget{parent}
 {
-    const QString initialFilename = QStringLiteral("Untitled");
+    QString initialFilename = QStringLiteral("Untitled");
+	
 
     QStringList userFilenames = db.getUserFilenames(userId_);
     if(userFilenames.isEmpty()){
