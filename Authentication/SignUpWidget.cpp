@@ -7,34 +7,38 @@
 SignUpWidget::SignUpWidget(QWidget *parent)
     : QWidget{parent}
 {
-    QVBoxLayout* VLayout = new QVBoxLayout(this);
-
-    QLabel* usernameLabel = new QLabel("Username : ");
-    QLabel* passwordLabel = new QLabel("Password : ");
-    QLabel* confirmPasswordLabel = new QLabel("Confirm Password : ");
+    auto signUpLabel = new QLabel("Sign Up", this);
+    signUpLabel->setFont(QFont("Times", 18, QFont::Bold));
+    signUpLabel->setStyleSheet("color: CornflowerBlue");
 
     usernameLineEdit = new QLineEdit;
-    usernameLineEdit->setPlaceholderText("login");
+    usernameLineEdit->setFixedWidth(150);
+    usernameLineEdit->setPlaceholderText("username");    
+
     passwordLineEdit = new QLineEdit;
+    passwordLineEdit->setFixedWidth(150);
     passwordLineEdit->setPlaceholderText("password");
     passwordLineEdit->setEchoMode(QLineEdit::Password);
+    
     confirmPasswordLineEdit = new QLineEdit;
+    confirmPasswordLineEdit->setFixedWidth(150);
     confirmPasswordLineEdit->setPlaceholderText("password");
     confirmPasswordLineEdit->setEchoMode(QLineEdit::Password);
 
-    QPushButton* createAccount = new QPushButton("create account");
-    VLayout->addWidget(usernameLabel);
-    VLayout->addWidget(usernameLineEdit);
-    VLayout->addWidget(passwordLabel);
-    VLayout->addWidget(passwordLineEdit);
-    VLayout->addWidget(confirmPasswordLabel);
-    VLayout->addWidget(confirmPasswordLineEdit);
-    VLayout->addSpacing(15);
-    VLayout->addWidget(createAccount);
+    QPushButton* createAccountButton = new QPushButton("create account");
 
-    setLayout(VLayout);
+    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+    mainLayout->setSpacing(75);
+    mainLayout->addWidget(signUpLabel,0,Qt::AlignmentFlag::AlignCenter);
+    mainLayout->addWidget(usernameLineEdit,0,Qt::AlignmentFlag::AlignCenter);
+    mainLayout->addWidget(passwordLineEdit,0,Qt::AlignmentFlag::AlignCenter);
+    mainLayout->addWidget(confirmPasswordLineEdit,0,Qt::AlignmentFlag::AlignCenter);
+    mainLayout->addWidget(createAccountButton,0,Qt::AlignmentFlag::AlignCenter);
+    mainLayout->addStretch();
+    
+    setLayout(mainLayout);
 
-    connect(createAccount,&QPushButton::clicked , this, &SignUpWidget::confirmUser);
+    connect(createAccountButton,&QPushButton::clicked , this, &SignUpWidget::confirmUser);
 }
 
 void SignUpWidget::confirmUser()
