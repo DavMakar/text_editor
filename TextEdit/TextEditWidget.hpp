@@ -16,7 +16,7 @@ class TextEditWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextEditWidget(int id , UserDataManager& dbFacade, QWidget *parent = nullptr);
+    explicit TextEditWidget(int id , UserDataManager& dataManager, QWidget *parent = nullptr);
     void setText(const QString&);
     void setId(int id);
 

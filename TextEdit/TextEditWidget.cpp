@@ -19,8 +19,6 @@
 TextEditWidget::TextEditWidget(int id, UserDataManager& db ,QWidget *parent)
     : userId_(id), db(db), textEdit_{new QTextEdit(this)},QWidget{parent}
 {
-    textEdit_->setMinimumSize(400,300);
-
     const QString initialFilename = QStringLiteral("Untitled");
 
     QStringList userFilenames = db.getUserFilenames(userId_);

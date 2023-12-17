@@ -10,7 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    MainWidget.cpp \
+    MainWindow.cpp \
     Authentication/SignUpWidget.cpp \
     Authentication/SignInWidget.cpp \
     Data/UserDataManager.cpp \
@@ -19,9 +19,8 @@ SOURCES += \
     TextEdit/FileNameDelegate.cpp \
     TextEdit/TextEditWidget.cpp \
 
-
 HEADERS += \
-    MainWidget.hpp \
+    MainWindow.hpp \
    	Authentication/SignUpWidget.hpp \
     Authentication/SignInWidget.hpp \
     Data/UserDataManager.hpp \

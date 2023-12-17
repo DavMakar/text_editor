@@ -1,20 +1,21 @@
-#ifndef MAINWIDGET_HPP
-#define MAINWIDGET_HPP
+#ifndef MAINWINDOW_HPP
+#define MAINWINDOW_HPP
 
-#include <QWidget>
-#include <QStackedWidget>
+#include <QMainWindow>
+#include <QStackedLayout>
 #include "Data/UserDataManager.hpp"
 
-class MainWidget : public QWidget
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit MainWidget(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
 
 private:
+    const QSize widgetSize{400, 300};
     int userId;
-    UserDataManager dbFacade;
-    QStackedWidget* stkWidget;
+    UserDataManager dataManager;
+    QStackedLayout* stkLayout;
 
 public slots:
     //void saveText(const QString& text);
@@ -25,4 +26,4 @@ public slots:
     void createUser(const QString& username, const QString& password);
 };
 
-#endif // MAINWIDGET_HPP
+#endif // MAINWINDOW_HPP
