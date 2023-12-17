@@ -1,45 +1,47 @@
 #include "SignInWidget.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QGroupBox>
 #include <QLabel>
 #include <QDialog>
+#include <QFont>
 #include <QPushButton>
 
 SignInWidget::SignInWidget(QWidget *parent)
     : QWidget{parent}
 {
-    
-    QVBoxLayout* VLayout = new QVBoxLayout(this);
-
-    QLabel* usernameLabel = new QLabel("Username : ");
-    QLabel* passwordLabel = new QLabel("Password : ");
+    auto welcomeLabel = new QLabel("Welcome to Text Editor", this);
+    welcomeLabel->setFont(QFont("Times", 18, QFont::Bold));
+    welcomeLabel->setStyleSheet("color: CornflowerBlue");
 
     usernameLineEdit = new QLineEdit;
-    usernameLineEdit->setPlaceholderText("login");
+    usernameLineEdit->setFixedWidth(150);
+    usernameLineEdit->setPlaceholderText("username");    
+
     passwordLineEdit = new QLineEdit;
+    passwordLineEdit->setFixedWidth(150);
     passwordLineEdit->setPlaceholderText("password");
     passwordLineEdit->setEchoMode(QLineEdit::Password);
+    
+    QPushButton* signInButton = new QPushButton("Sign in");
+    QPushButton* signUpButton = new QPushButton("Sign up");
 
-    QPushButton* signIn = new QPushButton("Sign in");
-    QPushButton* signUp = new QPushButton("Sign up");
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
 
-    QHBoxLayout* HButtonLayout = new QHBoxLayout();
-    HButtonLayout->addWidget(signIn);
-    HButtonLayout->addStretch(1);
-    HButtonLayout->addWidget(signUp);
+    mainLayout->setSpacing(75);
+    mainLayout->addWidget(welcomeLabel,0,Qt::AlignmentFlag::AlignCenter);
+    mainLayout->addWidget(usernameLineEdit,0,Qt::AlignmentFlag::AlignCenter);
+    mainLayout->addWidget(passwordLineEdit,0,Qt::AlignmentFlag::AlignCenter);
 
-    VLayout->addWidget(usernameLabel);
-    VLayout->addWidget(usernameLineEdit);
-    VLayout->addWidget(passwordLabel);
-    VLayout->addWidget(passwordLineEdit);
-    VLayout->addSpacing(15);
-    VLayout->addLayout(HButtonLayout);
+    buttonLayout->addWidget(signInButton);
+    buttonLayout->addWidget(signUpButton);
+    mainLayout->addLayout(buttonLayout);
+    mainLayout->addStretch();
+    
+    setLayout(mainLayout);
 
-    setLayout(VLayout);
-
-    connect(signIn, &QPushButton::clicked , this , &SignInWidget::signInClicked);
-    connect(signUp, &QPushButton::clicked , this , &SignInWidget::signUpClicked);
+    connect(signInButton, &QPushButton::clicked , this , &SignInWidget::signInClicked);
+    connect(signUpButton, &QPushButton::clicked , this , &SignInWidget::signUpClicked);
 }
 
 void SignInWidget::signInClicked()
