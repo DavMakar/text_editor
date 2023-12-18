@@ -2,6 +2,7 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QMessageBox>
 #include <QPushButton>
 
 SignUpWidget::SignUpWidget(QWidget *parent)
@@ -51,6 +52,6 @@ void SignUpWidget::confirmUser()
         emit createAccountSignal(username,password);
     }
     else{
-        qDebug() << "passwords don't match";
+        QMessageBox::critical(this, "Error", "Passwords don't match", QMessageBox::Ok);
     }
 }

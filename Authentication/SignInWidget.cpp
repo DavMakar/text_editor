@@ -28,13 +28,13 @@ SignInWidget::SignInWidget(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     QHBoxLayout *buttonLayout = new QHBoxLayout;
 
-    mainLayout->setSpacing(75);
+    mainLayout->setSpacing(80);
     mainLayout->addWidget(welcomeLabel,0,Qt::AlignmentFlag::AlignCenter);
     mainLayout->addWidget(usernameLineEdit,0,Qt::AlignmentFlag::AlignCenter);
     mainLayout->addWidget(passwordLineEdit,0,Qt::AlignmentFlag::AlignCenter);
 
-    buttonLayout->addWidget(signInButton);
-    buttonLayout->addWidget(signUpButton);
+    buttonLayout->addWidget(signInButton,0,Qt::AlignmentFlag::AlignBottom);
+    buttonLayout->addWidget(signUpButton,0,Qt::AlignmentFlag::AlignBottom);
     mainLayout->addLayout(buttonLayout);
     mainLayout->addStretch();
     
@@ -47,6 +47,8 @@ SignInWidget::SignInWidget(QWidget *parent)
 void SignInWidget::signInClicked()
 {
     emit signInSignal(usernameLineEdit->text(), passwordLineEdit->text());
+    usernameLineEdit->clear();
+    passwordLineEdit->clear();
 }
 
 void SignInWidget::signUpClicked(){

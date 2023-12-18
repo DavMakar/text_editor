@@ -81,7 +81,7 @@ bool UserDataManager::addFile(QString &filename, const QString &content, int use
         {
             break;
         }
-        tempFileName = filename + QString("(") + QString::number(index) + QString(")");
+        tempFileName = filename + QString("(") + QString::number(index+1) + QString(")");
     }
 	filename = tempFileName;
 

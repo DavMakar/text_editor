@@ -5,7 +5,6 @@
 
 class FilenameDelegate : public QStyledItemDelegate
 {
-//    Q_OBJECT
 public:
     FilenameDelegate(QObject* parent = nullptr);
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option , const QModelIndex &index);

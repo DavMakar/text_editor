@@ -1,4 +1,4 @@
-#include "EditorToolbar.hpp"
+#include "EditorToolBar.hpp"
 
 #include <QPixmap>
 

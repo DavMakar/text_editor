@@ -8,4 +8,7 @@
         <file>icons/save2.png</file>
         <file>icons/undo.png</file>
     </qresource>
+    <qresource prefix="/logout_icons">
+        <file>icons/logout.png</file>
+    </qresource>
 </RCC>

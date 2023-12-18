@@ -15,7 +15,8 @@ SOURCES += \
     Authentication/SignInWidget.cpp \
     Data/UserDataManager.cpp \
     Data/PasswordManager.cpp \
-    TextEdit/EditorToolbar.cpp \
+    TextEdit/EditorToolBar.cpp \
+    TextEdit/LogoutToolBar.cpp \
     TextEdit/FileNameDelegate.cpp \
     TextEdit/TextEditWidget.cpp \
 
@@ -25,7 +26,8 @@ HEADERS += \
     Authentication/SignInWidget.hpp \
     Data/UserDataManager.hpp \
     Data/PasswordManager.hpp \
-    TextEdit/EditorToolbar.hpp \
+    TextEdit/EditorToolBar.hpp \
+    TextEdit/LogoutToolBar.hpp \
     TextEdit/FileNameDelegate.hpp \
     TextEdit/TextEditWidget.hpp \
     

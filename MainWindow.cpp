@@ -3,6 +3,7 @@
 #include "Authentication/SignUpWidget.hpp"
 #include "TextEdit/TextEditWidget.hpp"
 #include <QVBoxLayout>
+#include <QMessageBox>
 #include <QIcon>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -48,9 +49,8 @@ void MainWindow::createUser(const QString& username, const QString& password)
 {
     if(dataManager.addUser(username, password))
     {
-        qDebug() << "Account created successfully";
         showSignIn();
-        qDebug()<< "Please log in";
+        QMessageBox::information(this, "Success", "Successfully registered! Please sign in", QMessageBox::Ok);
     }
     else
     {
@@ -58,7 +58,13 @@ void MainWindow::createUser(const QString& username, const QString& password)
     }
 }
 
-void MainWindow::checkUser(const QString& username, const QString& password)
+void MainWindow::logoutUser()
+{
+    stkLayout->removeWidget(stkLayout->currentWidget());
+    showSignIn();
+}
+
+void MainWindow::checkUser(const QString &username, const QString &password)
 {
     auto personId = dataManager.authenticateUser(username, password);
     if(personId)
@@ -68,9 +74,10 @@ void MainWindow::checkUser(const QString& username, const QString& password)
         textEdit->setMinimumSize(widgetSize);
         stkLayout->addWidget(textEdit);
         showTextEdit();
+        connect(textEdit , &TextEditWidget::logoutSignal , this , &MainWindow::logoutUser);
     }
     else
     {
-        qDebug()<< "Wrong username or password!!!";
+        QMessageBox::critical(this, "Error", "Wrong username or password", QMessageBox::Ok);
     }
 }

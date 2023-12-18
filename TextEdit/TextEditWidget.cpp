@@ -15,14 +15,17 @@
 #include "../Data/UserDataManager.hpp"
 #include "FileNameDelegate.hpp"
 #include "EditorToolbar.hpp"
+#include "LogoutToolbar.hpp"
 
 TextEditWidget::TextEditWidget(int id, UserDataManager& db ,QWidget *parent)
     : userId_(id), db(db), textEdit_{new QTextEdit(this)},QWidget{parent}
 {
-    QString initialFilename = QStringLiteral("Untitled");
-	
+    EditorToolBar* editBar = new EditorToolBar;
+    LogoutToolBar* logoutBar = new LogoutToolBar;
 
+    QString initialFilename = QStringLiteral("Untitled");
     QStringList userFilenames = db.getUserFilenames(userId_);
+
     if(userFilenames.isEmpty()){
         db.addFile(initialFilename,"",userId_);
         userFilenames << initialFilename;
@@ -40,17 +43,18 @@ TextEditWidget::TextEditWidget(int id, UserDataManager& db ,QWidget *parent)
     selectionModel = new QItemSelectionModel(slModel_);
     flnameView->setSelectionModel(selectionModel);
 
-    EditorToolBar* editBar = new EditorToolBar;
-
-    QVBoxLayout* vlayout = new QVBoxLayout();
-    vlayout->setSpacing(5);
-    vlayout->setContentsMargins(0,0,0,0);
-    vlayout->addWidget(editBar);
+    QHBoxLayout* toolbarLayout = new QHBoxLayout();
+    toolbarLayout->addWidget(editBar);
+    toolbarLayout->addWidget(logoutBar,0,Qt::AlignRight);
 
     QHBoxLayout* hlayout = new QHBoxLayout();
     hlayout->addWidget(flnameView);
     hlayout->addWidget(textEdit_);
 
+    QVBoxLayout* vlayout = new QVBoxLayout();
+    vlayout->setSpacing(5);
+    vlayout->setContentsMargins(0,0,0,0);
+    vlayout->addLayout(toolbarLayout);
     vlayout->addLayout(hlayout);
 
     setLayout(vlayout);
@@ -60,6 +64,7 @@ TextEditWidget::TextEditWidget(int id, UserDataManager& db ,QWidget *parent)
     connect(editBar,&EditorToolBar::deleteFileSignal,this,&TextEditWidget::deleteSlot);
     connect(editBar,&EditorToolBar::undoSignal,this,&TextEditWidget::undoSlot);
     connect(editBar,&EditorToolBar::redoSignal,this,&TextEditWidget::redoSlot);
+    connect(logoutBar,&LogoutToolBar::logoutSignal,this,&TextEditWidget::logoutSlot);
 
     connect(flnameView,&QListView::doubleClicked , this , &TextEditWidget::setOldFilenameSlot);
     connect(flnameDelegate,&FilenameDelegate::commitData , this , &TextEditWidget::updateFilenameSlot);
@@ -145,4 +150,9 @@ void TextEditWidget::undoSlot()
 void TextEditWidget::redoSlot()
 {
     textEdit_->redo();
+}
+
+void TextEditWidget::logoutSlot()
+{
+    emit logoutSignal();
 }

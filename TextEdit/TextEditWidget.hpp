@@ -25,6 +25,8 @@ private:
 
 signals:
     void saveSignal(QString);
+    void logoutSignal();
+
 private slots:
     void setOldFilenameSlot(const QModelIndex& index);
     void updateFilenameSlot(QWidget* editor);
@@ -33,7 +35,7 @@ private slots:
     void deleteSlot();
     void undoSlot();
     void redoSlot();
-
+    void logoutSlot();
     void selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
